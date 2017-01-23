@@ -50,7 +50,7 @@ function init() {
        data: JSON.stringify({url: feedUrl}),
        contentType:"application/json",
        success: function (result, status){
-
+                console.debug('Feed entries', result.feed.entries);
                  var container = $('.feed'),
                      title = $('.header-title'),
                      entries = result.feed.entries,
