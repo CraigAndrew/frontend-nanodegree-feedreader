@@ -27,7 +27,6 @@ $(function() {
             expect(allFeeds).toBeDefined();
             // check that allFeeds is populated
             expect(allFeeds.length).not.toBe(0);
-            expect(loadFeed(-1)).toThrow(e);
         });
 
 
@@ -59,20 +58,18 @@ $(function() {
         // Test to check that the menu element is hidden by default
         it('element is hidden by default', function() {
             // check if the body has the "menu-hidden" class, this implies that the menu is hidden
-            expect($('body').hasClass('menu-hidden')).toBe(true);
+            expect($('body').hasClass('menu-hidden')).toBeTruthy();
         });
 
         // Test to check that the menu visibility toggles when the icon is clicked
         it('changes visibility when the menu icon is clicked', function() {
           var menuIcon = $('.menu-icon-link');
-          // initially the menu should be hidden
-          expect($('body').hasClass('menu-hidden')).toBe(true);
           menuIcon.click();
           // after clicking the menu icon the menu should now be visible
-          expect($('body').hasClass('menu-hidden')).toBe(false);
+          expect($('body').hasClass('menu-hidden')).toBeFalsy();
           menuIcon.click();
           // after clicking the menu icon now it should now be hidden again
-          expect($('body').hasClass('menu-hidden')).toBe(true);
+          expect($('body').hasClass('menu-hidden')).toBeTruthy();
         });
     });
 
@@ -83,18 +80,16 @@ $(function() {
         });
 
         // Test to check there is at least one .entry element within the .feed container.
-        it('are loaded', function(done) {
-            expect($('.feed').children().length).toBeGreaterThan(0);
-            done();
+        it('are loaded', function() {
+            expect($('.feed .entry').children().length).toBeGreaterThan(0);
         });
 
         // Make sure each (.feed .entry-link) element has valid link
-        it("has a entry that has a link starting with 'http(s)://'", function(done) {
+        it("has a entry that has a link starting with 'http(s)://'", function() {
             var entries = document.querySelector(".feed").getElementsByClassName("entry-link");
             for(var i = 0; i < entries.length; i++){
                 expect(entries[i].href).toMatch(/^(http|https):\/\//);
             }
-            done();
         });
     })
 
@@ -102,8 +97,8 @@ $(function() {
         var oldContent;
         var newContent;
 
-        // beforeEach wait for async calls to finish
-        beforeEach(function(done) {
+        // Test to check that content is different
+        it('changes content', function(done) {
             // Load the first feed
             loadFeed(0 ,function() {
                 // Save content of feed to variable
@@ -112,15 +107,10 @@ $(function() {
                 loadFeed(1, function() {
                     // Save content of feed to variable
                     newContent = $('.feed').html();
+                    expect(oldContent).not.toEqual(newContent);
                     done();
                 });
             });
-        });
-
-        // Test to check that content is different
-        it('changes content' , function(done) {
-            expect(oldContent != newContent).toBe(true);
-            done();
         });
     });
 }());
